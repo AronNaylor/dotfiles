@@ -1,0 +1,69 @@
+# Use custom format
+format = '''
+$directory$git_branch$git_status$aws${env_var.USER}$kubernetes
+$character
+'''
+
+command_timeout = 1000
+
+[aws]
+force_display = true
+style = "bold #ffb86c"
+format = ' [$symbol($profile )(\($region\) )]($style)'
+symbol = ' '
+
+[kubernetes]
+format = ' [󱃾 ($context)](bold blue) '
+disabled = false
+
+[env_var.USER]
+disabled = false
+symbol = ' '
+variable = "ASSUMEROLE_PROFILE"
+default = "n/a"
+format = "as [$env_value](bold red) "
+
+[git_status]
+style = "bold #50fa7b"
+conflicted = '🏳'
+ahead = '🏎💨'
+behind = '😰'
+diverged = '😵'
+up_to_date = '✓'
+untracked = '🤷'
+stashed = '📦'
+modified = '📝'
+staged = '[++\($count\)](green)'
+renamed = '👅'
+deleted = '🗑'
+
+[git_branch]
+style = "bold #ff79c6"
+symbol = "💻 "
+truncation_length = 20
+truncation_symbol = "…"
+
+[character]
+format = " "
+success_symbol = "(bold #50fa7b)"
+error_symbol = "(bold #ff5555)"
+
+[directory]
+style = "bold #50fa7b"
+format = "In [$path]($style)[$read_only]($read_only_style) "
+truncation_length = 4
+truncate_to_repo = false
+truncation_symbol = "…/"
+
+[hostname]
+disabled = true
+style = "bold #bd93f9"
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[time]
+disabled = true
+time_format = "%Y-%m-%d %H:%M"
+utc_time_offset = "local"
