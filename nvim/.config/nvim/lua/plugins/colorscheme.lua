@@ -1,13 +1,18 @@
 return {
-  -- add gruvbox
   {
-    "nanotech/jellybeans.vim",
+    "EdenEast/nightfox.nvim",
+    opts = {
+      groups = {
+        all = {
+          Visual = { bg = "#faf5f5", fg = "#080808" },
+        },
+      },
+    },
   },
-  -- Configure LazyVim to load gruvbox
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "jellybeans",
+      colorscheme = "carbonfox",
     },
   },
 }
