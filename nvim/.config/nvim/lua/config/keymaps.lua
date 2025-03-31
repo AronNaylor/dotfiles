@@ -19,4 +19,4 @@ map("n", "<leader>ad", ":Copilot disable<CR>", { desc = "Disable Copilot", unpac
 map("n", "<leader>as", ":Copilot status<CR>", { desc = "Show Copilot status", unpack(opts) })
 
 -- Open Copilot Chat model selection
-map("n", "<leader>ac", ":Copilot chat model<CR>", { desc = "Open Copilot Chat model selection", unpack(opts) })
+map("n", "<leader>ac", ":CopilotChatModel<CR>", { desc = "Open Copilot Chat model selection", unpack(opts) })
