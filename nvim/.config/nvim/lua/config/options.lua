@@ -3,3 +3,5 @@
 -- Add any additional options here
 vim.opt.colorcolumn = "100"
 vim.opt.textwidth = 100
+vim.opt.wrap = true
+vim.opt.linebreak = true
