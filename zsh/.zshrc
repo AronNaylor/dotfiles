@@ -1,4 +1,7 @@
 export PATH export STARSHIP_CONFIG=~/.config/starship.toml # NOTE: Keep this at the top of all other functiions or the grep/awk combo won't work corectly
+
+bindkey -v
+
 function list_aliases () {
   local NOCOLOUR=$(tput sgr0)
   local RED=$(tput setaf 1)
@@ -108,3 +111,7 @@ export PATH="$HOME/go/bin:$PATH"
 eval "$(starship init zsh)"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 [ -f $HOMEBREW_PREFIX/etc/profile.d/autojump.sh ] && . $HOMEBREW_PREFIX/etc/profile.d/autojump.sh
+eval "$(mcfly init zsh)"
+
+# Added by Windsurf
+export PATH="/Users/aron/.codeium/windsurf/bin:$PATH"
