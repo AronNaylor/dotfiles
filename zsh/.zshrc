@@ -2,34 +2,68 @@ export PATH export STARSHIP_CONFIG=~/.config/starship.toml # NOTE: Keep this at 
 
 bindkey -v
 
-function list_aliases () {
-  local NOCOLOUR=$(tput sgr0)
-  local RED=$(tput setaf 1)
-  local GREEN=$(tput setaf 2)
-  local PINK=$(tput setaf 5)
-  local YELLOW=$(tput setaf 3)
-  local UNDERLINE_START=$(tput smul)
-  local UNDERLINE_END=$(tput rmul)
+# ------------------------------------------------------------------------------
+# COMPLETION CONFIGURATION
+# ------------------------------------------------------------------------------
 
-  # Print table header
-  printf "${YELLOW}${UNDERLINE_START}%-20s %-50s ${UNDERLINE_END}${NOCOLOUR}\n" "Type" "Definition"
+# Initialize the completion system
+# -U: allow aliases, -z: zsh style initialization
+autoload -Uz compinit && compinit 
 
-  grep 'alias' ~/.zshrc | tail -n +5 | awk '{print $2}' | cut -d= -f1 | while read -r alias_name; do
-    printf "${GREEN}%-20s %-50s ${NOCOLOUR}\n" "Alias" "${alias_name}"
-  done
+# Set completion styles for better usability
+# Use caching to speed up subsequent loads
+zstyle ':completion:*' use-cache true
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# Group completions by type
+zstyle ':completion:*' group-name ''
+# Enable menu completion (cycle through options with Tab)
+zstyle ':completion:*:*:*:*:*' menu select
+# Add color coding to completions
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# Show descriptions for commands/options
+zstyle ':completion:*:descriptions' format '%B%d%b'
+# Show group headers for completions
+zstyle ':completion:*:*:*:*:*' group-name ''
 
-  grep 'function' ~/.zshrc | awk 'NR!=2' | awk '{print $2}' | while read -r func_name; do
-    printf "${PINK}%-20s %-50s ${NOCOLOUR}\n" "Function" "${func_name}"
-  done
-}
+# Example: Nicer display for kill command completions
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+# ------------------------------------------------------------------------------
+# HISTORY CONFIGURATION
+# ------------------------------------------------------------------------------
+
+# History file location
+HISTFILE=~/.zsh_history
+
+# Number of history lines to keep in memory for the current session
+HISTSIZE=10000
+
+# Number of history lines to save to the history file
+SAVEHIST=10000
+
+# Append new history lines to the history file (don't overwrite)
+setopt APPEND_HISTORY
+# Append commands to the history file immediately as they are executed
+setopt INC_APPEND_HISTORY
+# Share history between all running shells (imports new entries from file and exports session entries)
+setopt SHARE_HISTORY
+# Don't record duplicate commands if they are executed consecutively
+setopt HIST_IGNORE_DUPS
+# Don't record commands starting with a space
+setopt HIST_IGNORE_SPACE
+# Expire duplicate entries first when trimming history
+setopt HIST_EXPIRE_DUPS_FIRST
+# Don't write duplicate entries to the history file
+setopt HIST_SAVE_NO_DUPS
+# Remove blank lines from history
+setopt HIST_REDUCE_BLANKS
+
+# ------------------------------------------------------------------------------
 
 function restart () {
   exec "$SHELL" -l
-}
-
-# code workaround for vscode
-function code () { 
-  VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;
 }
 
 function newworktree () {
@@ -52,19 +86,6 @@ function worktreeclean () {
     rm -rf $s
   done <<< "$selection"
 }
-
-# function j() {
-#     local preview_cmd="ls {2..}"
-#     if command -v exa &> /dev/null; then
-#         preview_cmd="exa -l {2}"
-#     fi
-#
-#     if [[ $# -eq 0 ]]; then
-#                  cd "$(autojump -s | sort -k1gr | awk -F : '$1 ~ /[0-9]/ && $2 ~ /^\s*\// {print $1 $2}' | fzf --height 40% --reverse --inline-info --preview "$preview_cmd" --preview-window down:50% | cut -d$'\t' -f2- | sed 's/^\s*//')"
-#     else
-#         cd $(autojump $@)
-#     fi
-# }
 
 # Git
 alias ws="worktreeswitch"
@@ -113,5 +134,3 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 [ -f $HOMEBREW_PREFIX/etc/profile.d/autojump.sh ] && . $HOMEBREW_PREFIX/etc/profile.d/autojump.sh
 eval "$(mcfly init zsh)"
 
-# Added by Windsurf
-export PATH="/Users/aron/.codeium/windsurf/bin:$PATH"
