@@ -1,0 +1,45 @@
+zwt-clean() {
+  #
+  # zwt-clean - A contextual script to clean up the current Zellij tab
+  #             and its associated git worktree.
+  #
+  # Usage: Run this script with no arguments from the tab you wish to clean.
+  #
+
+  # 1. --- Check Environment ---
+  if [ -z "$ZELLIJ" ]; then
+    echo "Error: This script must be run from within a Zellij session."
+  fi
+
+  # 2. --- Gather Context ---
+  # Get the current git branch name
+  local CURRENT_BRANCH=$(git branch --show-current)
+  # Get the root path of the current worktree
+  local WORKTREE_PATH=$(pwd)
+
+  echo "Preparing to clean up..."
+  echo "   - Current Branch:   $CURRENT_BRANCH"
+  echo "   - Worktree Path:    $WORKTREE_PATH"
+
+  # 3. --- Execute Cleanup ---
+  echo "Starting cleanup..."
+  local REPO_NAME=$(basename "$(dirname "$WORKTREE_PATH")")
+  local MAIN_REPO_PATH="$HOME/code/$REPO_NAME"
+
+  # Exit immediately if the user is on the main or master branch.
+  if [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "master" ]]; then
+    echo "Error: Cannot remove the '$CURRENT_BRANCH' branch."
+    echo "This script is only for cleaning up feature-branch worktrees."
+    return 1
+  fi
+
+  echo "   - Removing worktree..."
+  (
+    cd $MAIN_REPO_PATH
+    git worktree remove "$WORKTREE_PATH" --force
+    git branch -D "$CURRENT_BRANCH"
+  )
+
+  rm -rf "$WORKTREE_PATH"
+  zellij action close-tab
+}

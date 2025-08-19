@@ -1,0 +1,52 @@
+zwt() {
+  #
+  # zwt - Creates a new git worktree in ~/worktrees/ and opens it in a new Zellij tab.
+  #
+  # Usage: zwt <new-branch-name> [base-branch]
+
+  # 1. --- Check Environment and Arguments ---
+  if [ -z "$1" ]; then
+    echo "Error: No new branch name supplied."
+    echo "Usage: $0 <new-branch-name> [base-branch]"
+    exit 1
+  fi
+
+  if [ -z "$ZELLIJ" ]; then
+    echo "Error: This script must be run from within a Zellij session."
+    exit 1
+  fi
+
+  # 2. --- Set Up Variables (from your newworktree function) ---
+  BRANCH_NAME=$1
+  # Default to 'main' if the second argument is not provided.
+  BASE_BRANCH=${2:-"master"}
+
+  # Get the current directory's name (a robust way to get 'repo')
+  CURRENT_REPO_NAME=$(basename "$(pwd)")
+
+  # Construct the full path for the new worktree, same as your function
+  WORKTREE_PATH="$HOME/worktrees/$CURRENT_REPO_NAME/$BRANCH_NAME"
+
+  echo "==> Preparing to create worktree..."
+  echo "    - New Branch:  $BRANCH_NAME"
+  echo "    - From Base:   $BASE_BRANCH"
+  echo "    - In Path:     $WORKTREE_PATH"
+
+  # 3. --- Create the Worktree ---
+  # Ensure the parent directory exists, which `git worktree add` requires.
+  mkdir -p "$(dirname "$WORKTREE_PATH")"
+
+  echo "==> Creating git worktree..."
+  git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_BRANCH"
+
+  if [ $? -ne 0 ]; then
+    echo "Error: Failed to create git worktree. Does it already exist?"
+    exit 1
+  fi
+
+  # 4. --- Create and Switch to the new Zellij Tab ---
+  echo "==> Creating Zellij tab..."
+  export Z_WT_DIR=$WORKTREE_PATH
+  zellij action new-tab --name "$BRANCH_NAME" --layout ~/.config/zellij/layouts/worktree-default.kdl
+  unset Z_WT_DIR
+}

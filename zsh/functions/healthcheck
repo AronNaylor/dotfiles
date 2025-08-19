@@ -1,0 +1,3 @@
+healthcheck() {
+    echo "zsh function autoloading working"
+}
