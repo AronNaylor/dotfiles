@@ -1,0 +1,84 @@
+/* Import the pywal ROFI color scheme */
+@import url("/home/aron/.cache/wal/colors-rofi-dark.rasi");
+
+window {
+    margin: 0px;
+    /* Use an accent color for the border to make it visible and stylish */
+    border: 5px solid @color2;
+    /* Use the main background color for the window itself */
+    background-color: @background;
+    border-radius: 20px;
+}
+
+#input {
+    padding: 4px;
+    margin: 10px;
+    margin-bottom: 2px;
+    padding-left: 20px;
+    border: none;
+    color: @foreground;
+    font-weight: bold;
+    background-color: @background;
+    outline: none;
+    border-radius: 15px;
+}
+
+#input:focus {
+    border: 0px solid @background;
+}
+
+#inner-box {
+    margin: 4px;
+    border: 10px solid @background;
+    color: @foreground;
+    font-weight: 400;
+    background-color: @background;
+    border-radius: 15px;
+}
+
+#outer-box {
+    margin: 0px;
+    border: none;
+    border-radius: 15px;
+    background-color: @background;
+}
+
+#scroll {
+    margin-top: 5px;
+    border: none;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+
+#img {
+    padding: 5px;
+    margin-right: 3px;
+}
+
+#img:selected {
+    background-color: @color4; /* Using an accent color */
+    border-radius: 15px;
+}
+
+#text:selected {
+    color: @background; /* Use background for text on a colored highlight */
+    margin: 0px 0px;
+    border: none;
+    font-weight: bold;
+    border-radius: 15px;
+    background-color: @color4; /* Using an accent color */
+}
+
+#entry {
+    margin: 0px 0px;
+    border: none;
+    border-radius: 15px;
+    background-color: transparent;
+}
+
+#entry:selected {
+    margin: 0px 0px;
+    border: none;
+    border-radius: 15px;
+    background-color: @color4; /* Using an accent color */
+}
